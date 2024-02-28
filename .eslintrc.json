@@ -1,15 +1,10 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true
-    },
-    "extends": "airbnb",
-    "parserOptions": {
-        "ecmaVersion": "latest"
-    },
-    "rules": {
-    },
-    "editor.codeActionsOnSave": {
-        "source.fixAll": "explicit"
-    }
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": "airbnb",
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  }
 }
