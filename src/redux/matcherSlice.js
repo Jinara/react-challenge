@@ -4,52 +4,91 @@ import elements from '../elements.json';
 
 const initialState = {
   elements: elements.elements.map((elem) => elem.symbol),
-  currentElement: '',
   matches: [],
+  loading: false,
+  word: '',
 };
 
-// Filters
-// const THERE_IS_A_MATCH = 'matcher/match';
-// const THERE_IS_NOT_A_MATCH = 'matcher/notAMatch';
+// export const highlightThunk = createAsyncThunk('matcher/highlight', async (word) => {
+//   await initialState.elements.forEach((element) => {
+//     const regex = new RegExp(element, 'i');
+//     const matchIt = word.match(regex);
+//     if (matchIt) {
+//       console.log(matchIt, 'retornando', element);
+//       return [element];
+//     }
+//     console.log('no match retornando vacio');
+//     return [];
+//   });
+// });
 
 export const matcherSlice = createSlice({
   name: 'matcher',
   initialState,
   reducers: {
-    match: (state = initialState, action = {}) => {
-      const allMatches = state.matches.concat(action.payload);
-      return { ...state, matches: allMatches };
+    updateWord: (state = initialState, action = {}) => {
+      state.word = action.payload;
     },
-    notAMatch: (state = initialState) => (state),
+    isAMatch: (state = initialState, action = {}) => {
+      const allMatches = [...new Set([...state.matches, ...action.payload])];
+      console.log('match:', allMatches);
+      state.matches = allMatches;
+    },
+    notAMatch: (state = initialState, action = {}) => {
+      const allMatches = [...new Set([...state.matches, ...action.payload])];
+      state.matches = allMatches;
+    },
+    emptyWord: (state = initialState) => { state.matches = []; },
   },
+  // extraReducers: (builder) => {
+  //   builder
+  //     .addCase(highlightThunk.fulfilled, (state, action) => {
+  //       console.log('guligli', state, action);
+  //       // const allMatches = [...new Set([...state.matches, ...action.payload])];
+  //       // console.log('fulfilled', allMatches);
+  //       // return { ...state, matches: allMatches };
+  //       state.matches = [...new Set([...state.matches, ...action.payload])];
+  //     })
+  //     .addCase(highlightThunk.pending, (state, action) => {
+  //       console.log('loading', state, action);
+  //       state.loading = true;
+  //     })
+  //     .addCase(highlightThunk.rejected, (state, action) => {
+  //       console.log('rejected', state, action);
+  //       state.loading = false;
+  //     });
+  // },
 });
 
-export const { match, notAMatch } = matcherSlice.actions;
+export const {
+  isAMatch, notAMatch, emptyWord, updateWord,
+} = matcherSlice.actions;
 
-export const highlightAction = (word, element) => (dispatch) => {
-  const regex = new RegExp(element);
-  const matchIt = word.match(regex);
-  if (matchIt) {
-    console.log(matchIt);
-    dispatch(match([element]));
-  } else {
-    dispatch(notAMatch([]));
-  }
-};
+// ajaWordThunk is the "thunk action creator"
+export function ajaThunk(word) {
+  // fetchTodoByIdThunk is the "thunk function"
+  return async function ajaWordThunk(dispatch, getState) {
+    getState().matcherReducer.elements.forEach((element) => {
+      const regex = new RegExp(element, 'i');
+      const matchIt = word.match(regex);
+      if (matchIt) {
+        // console.log(matchIt, 'retornando', element);
+        dispatch(isAMatch([element]));
+      }
+    });
+  };
+}
 
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state) => state.counter.value)`
-export const selectMatches = (store) => store.matchReducer.matches;
+export const selectMatches = (store) => store.matcherReducer.matches;
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
 // will call the thunk with the `dispatch` function as the first argument. Async
 // code can then be executed and other actions can be dispatched
 // thunk
-export const matcherAll = (word) => (dispatch, state) => {
-  const els = state().matchReducer.elements || [];
-  els.forEach((element) => dispatch(highlightAction(word, element)));
-};
+// export const matcherAll = (word) => async (dispatch, state) => {
+//   const els = state().matchReducer.elements || [];
+//   await els.forEach((element) => dispatch(highlightAction(word, element)));
+// };
 
 export default matcherSlice.reducer;
