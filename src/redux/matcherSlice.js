@@ -7,6 +7,7 @@ const initialState = {
   matches: [],
   loading: false,
   word: '',
+  aMatch: false,
 };
 
 // export const highlightThunk = createAsyncThunk('matcher/highlight', async (word) => {
@@ -33,6 +34,7 @@ export const matcherSlice = createSlice({
       const allMatches = [...new Set([...state.matches, ...action.payload])];
       console.log('match:', allMatches);
       state.matches = allMatches;
+      state.aMatch = true;
     },
     notAMatch: (state = initialState, action = {}) => {
       const allMatches = [...new Set([...state.matches, ...action.payload])];
@@ -72,7 +74,7 @@ export function ajaThunk(word) {
       const regex = new RegExp(element, 'i');
       const matchIt = word.match(regex);
       if (matchIt) {
-        // console.log(matchIt, 'retornando', element);
+        console.log(matchIt, 'retornando', element);
         dispatch(isAMatch([element]));
       }
     });

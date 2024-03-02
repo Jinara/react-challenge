@@ -1,14 +1,13 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-// import Elements from './components/elements';
 import store from './redux/store';
-import Matcher from './components/matcher';
+import Breakify from './components/Breakify';
 
 function App() {
   return (
     <Provider store={store}>
-      <Matcher />
+      <Breakify />
     </Provider>
   );
 }
