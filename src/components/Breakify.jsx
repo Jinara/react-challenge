@@ -1,21 +1,15 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
-  selectMatches,
   emptyWord,
   updateWord,
-  ajaThunk,
+  highlightThunk,
 } from '../redux/matcherSlice';
+import HighlightedPhrase from './HighlightedPhrase';
 
 export default function Breakify() {
-  const matches = useSelector(selectMatches);
   const dispatch = useDispatch();
-  const aMatch = useSelector((state) => {
-    if (state.matcherReducer.aMatch) {
-      return 'Siii';
-    }
-    return 'Ño :(';
-  });
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -31,10 +25,9 @@ export default function Breakify() {
   };
 
   const onHighlighting = () => {
-    console.log('holi');
     dispatch(emptyWord([]));
     if (phrase) {
-      dispatch(ajaThunk(phrase));
+      dispatch(highlightThunk(phrase));
     } else {
       dispatch(emptyWord([]));
     }
@@ -45,47 +38,32 @@ export default function Breakify() {
   }, [firstName, lastName]);
 
   return (
-    <div className="background-color: cian">
-      <span>
-        Words:
-        {' '}
-        {phrase}
-        <br />
-        firstName:
-        {' '}
-        {firstName}
-        <br />
-        lastName:
-        {' '}
-        {lastName}
-        <br />
-        Matches:
-        {matches}
-        There was a match?:
-        {' '}
-        {aMatch}
-      </span>
-      <br />
+    <div className="">
+      <HighlightedPhrase />
 
       <div>
-        First Name:
+        <label>
+          First Name:
 
-        <input
-          type="text"
-          name="firstName"
-          aria-label="firstName"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
-        Last Name:
+          <input
+            type="text"
+            name="firstName"
+            aria-label="firstName"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+        </label>
+        <label>
+          Last Name:
 
-        <input
-          type="text"
-          name="LastName"
-          aria-label="lastName"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
+          <input
+            type="text"
+            name="LastName"
+            aria-label="lastName"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </label>
       </div>
 
       <button type="button" onClick={() => onHighlighting()}>
