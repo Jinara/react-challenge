@@ -36,37 +36,40 @@ export default function Breakify() {
   }, [firstName, lastName]);
 
   return (
-    <div className="">
-      <HighlightedPhrase />
+    <div className="flex justify-center p-6 mx-auto text-white">
+      <div className="bg-black w-1/3">
 
-      <div>
-        <label>
-          First Name:
+        <HighlightedPhrase className="" />
 
-          <input
-            type="text"
-            name="firstName"
-            aria-label="firstName"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-        </label>
-        <label>
-          Last Name:
+        <div>
+          <label className="text-white">
+            First Name:
 
-          <input
-            type="text"
-            name="LastName"
-            aria-label="lastName"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-        </label>
+            <input
+              type="text"
+              name="firstName"
+              aria-label="firstName"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </label>
+          <label>
+            Last Name:
+
+            <input
+              type="text"
+              name="LastName"
+              aria-label="lastName"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <button type="button" onClick={() => onHighlighting()}>
+          Breakify
+        </button>
       </div>
-
-      <button type="button" onClick={() => onHighlighting()}>
-        Breakify
-      </button>
     </div>
   );
 }

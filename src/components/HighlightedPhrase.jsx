@@ -6,7 +6,7 @@ export default function HighlightedPhrase() {
   const [highlightedWords, sethighlightedWords] = useState();
 
   const buildHighlighted = (word) => (
-    <span className="textItem" key={word}>{word}</span>
+    <span className="bg-green text-white" key={word}>{word}</span>
   );
 
   const highlight = (wordToHighligh = {}) => {
@@ -37,7 +37,7 @@ export default function HighlightedPhrase() {
   }, [words]);
 
   return (
-    <div className="text-3xl font-bold underline">
+    <div className="w-10/12 text-white text-center text-5xl mx-auto pt-8">
       {highlightedWords}
     </div>
   );
