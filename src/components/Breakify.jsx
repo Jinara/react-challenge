@@ -2,9 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
-  emptyWord,
-  updateWord,
-  highlightThunk,
+  emptyWords,
+  updateWords,
+  highlightFirstMatch,
 } from '../redux/matcherSlice';
 import HighlightedPhrase from './HighlightedPhrase';
 
@@ -13,28 +13,26 @@ export default function Breakify() {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [phrase, setPhrase] = useState('');
-
-  const onPhraseChange = (value) => {
-    if (value) {
-      dispatch(updateWord(value));
-    } else {
-      dispatch(emptyWord([]));
-    }
-    setPhrase(value);
-  };
 
   const onHighlighting = () => {
-    dispatch(emptyWord([]));
-    if (phrase) {
-      dispatch(highlightThunk(phrase));
+    dispatch(emptyWords());
+    if (firstName && lastName) {
+      dispatch(highlightFirstMatch(firstName));
+      dispatch(highlightFirstMatch(lastName));
     } else {
-      dispatch(emptyWord([]));
+      dispatch(emptyWords());
     }
   };
 
   useEffect(() => {
-    onPhraseChange(`${firstName} ${lastName}`);
+    if (firstName && lastName) {
+      const newWords = [
+        { word: firstName }, { word: lastName },
+      ];
+      dispatch(updateWords(newWords));
+    } else {
+      dispatch(emptyWords());
+    }
   }, [firstName, lastName]);
 
   return (

@@ -1,44 +1,44 @@
-import React from 'react';
-// import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 export default function HighlightedPhrase() {
-  // const phrase = useSelector((store) => store.matcherReducer.word);
-  // const matches = useSelector((store) => store.matcherReducer.matches);
-  const wordsToHighlight = [
-    { word: 'Nathaly', match: 'Na' },
-    { word: 'Breaking', match: 'Br' },
-  ];
+  const words = useSelector((store) => store.matcherReducer.words);
+  const [highlightedWords, sethighlightedWords] = useState();
 
   const buildHighlighted = (word) => (
     <span className="textItem" key={word}>{word}</span>
   );
 
-  const highlight = (wordToHighligh) => {
+  const highlight = (wordToHighligh = {}) => {
+    console.log('llego un word: ', wordToHighligh);
     const { word, match } = wordToHighligh;
-    const regex = new RegExp(`(?:${match})|(?:<=${match})`, 'g');
-    const holi = word.split(regex);
 
-    const wii = holi.map((r) => {
-      if (r === '') {
+    /*
+      It splits the word by the match without removing the delimiter
+    */
+    const regex = new RegExp(`(?:${match})|(?:<=${match})`, 'g');
+    const wordAsArray = word.split(regex);
+    const wordWithSpan = wordAsArray.map((piece) => {
+      if (piece === '') {
         return buildHighlighted(match);
       }
-      return r;
+      return piece;
     });
-    console.log('TERMINAMOS CON ', word, ' Y ES: ', wii);
-    return wii;
+    console.log('TERMINAMOS CON ', word, ' Y ES: ', wordWithSpan);
+    return wordWithSpan;
   };
 
-  const aja = () => wordsToHighlight.forEach((word) => highlight(word));
+  useEffect(() => {
+    if (words) {
+      console.log('a ver que hay', words);
+      const newWords = words.map((word) => highlight(word));
+      sethighlightedWords(newWords);
+    }
+  }, [words]);
 
   return (
     <div>
-      My words
-      <br />
-      {aja()}
-      <br />
-      <br />
-      {highlight(wordsToHighlight[0])}
-      {highlight(wordsToHighlight[1])}
+      {highlightedWords}
     </div>
   );
 }
