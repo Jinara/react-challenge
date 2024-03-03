@@ -2,11 +2,21 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import elements from '../elements.json';
 
+const computeRegexBuild = () => {
+  const elementsString = elements.elements.reduce((acc, elem) => {
+    if (elem.symbol.length >= 2) {
+      const newAcc = acc + elem.symbol;
+      return `${newAcc}|`;
+    }
+    return acc;
+  }, '');
+  return `(?:${elementsString}\b)`;
+};
+
 const initialState = {
-  elements: elements.elements.map((elem) => elem.symbol),
   matches: [],
   word: '',
-  aMatch: false,
+  words: [],
 };
 
 export const matcherSlice = createSlice({
@@ -15,12 +25,13 @@ export const matcherSlice = createSlice({
   reducers: {
     updateWord: (state = initialState, action = {}) => {
       state.word = action.payload;
+      const allWords = [...new Set([...state.words, ...action.payload])];
+      state.words = allWords;
     },
     isAMatch: (state = initialState, action = {}) => {
       const allMatches = [...new Set([...state.matches, ...action.payload])];
       console.log('match:', allMatches);
       state.matches = allMatches;
-      state.aMatch = true;
     },
     notAMatch: (state = initialState, action = {}) => {
       const allMatches = [...new Set([...state.matches, ...action.payload])];
@@ -35,15 +46,12 @@ export const {
 } = matcherSlice.actions;
 
 export function highlightThunk(word) {
-  return async function ajaWordThunk(dispatch, getState) {
-    getState().matcherReducer.elements.forEach((element) => {
-      const regex = new RegExp(element, 'i');
-      const matchIt = word.match(regex);
-      if (matchIt) {
-        console.log(matchIt, 'retornando', element);
-        dispatch(isAMatch([element]));
-      }
-    });
+  return async function thunk(dispatch) {
+    const regex = new RegExp(computeRegexBuild(), 'g');
+    const matchIt = word.match(regex);
+    if (matchIt) {
+      dispatch(isAMatch(matchIt));
+    }
   };
 }
 

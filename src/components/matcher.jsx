@@ -5,52 +5,52 @@ import {
   selectMatches,
   emptyWord,
   updateWord,
-  ajaThunk,
+  highlightThunk,
 } from '../redux/matcherSlice';
 
 export default function Matcher() {
   const matches = useSelector(selectMatches);
   const dispatch = useDispatch();
 
-  const [word, setWord] = useState('');
+  const [words, setWords] = useState('');
 
   const onHighlighting = () => {
     dispatch(emptyWord([]));
-    if (word) {
-      dispatch(ajaThunk(word));
+    if (words) {
+      dispatch(highlightThunk(words));
     } else {
       dispatch(emptyWord([]));
     }
   };
 
-  const onWordChange = (value) => {
-    if (value) {
-      dispatch(updateWord(value));
-    } else {
-      dispatch(emptyWord([]));
-    }
-    setWord(value);
-  };
+  // const onWordChange = (value) => {
+  //   if (value) {
+  //     dispatch(updateWord(value));
+  //   } else {
+  //     dispatch(emptyWord([]));
+  //   }
+  //   setWord(value);
+  // };
 
   return (
-    <div>
-      <div>
-        <span>{word}</span>
+    <form onSubmit={onHighlighting}>
+      <div className="background-color: cian">
+        <span>
+          Words:
+          {words}
+        </span>
         <br />
         <span>{matches}</span>
         <br />
+        {children}
         <button
           type="button"
           onClick={() => onHighlighting()}
         >
           machear
         </button>
-        <input
-          aria-label="word"
-          value={word}
-          onChange={(e) => onWordChange(e.target.value)}
-        />
       </div>
-    </div>
+    </form>
   );
 }
+
