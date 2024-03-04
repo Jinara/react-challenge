@@ -10,13 +10,16 @@ const computeRegexBuild = () => {
     }
     return acc;
   }, '');
-  return `(?:${elementsString}\b)`;
+  return `^(?:${elementsString}\b)`;
 };
 
 const initialState = {
   words: [],
 };
 
+/*
+  TODO: refactor repeated code
+*/
 export const matcherSlice = createSlice({
   name: 'matcher',
   initialState,
@@ -28,6 +31,11 @@ export const matcherSlice = createSlice({
       const allWords = [...new Set([...state.words, action.payload])];
       state.words = allWords;
     },
+    anyMatchFound: (state = initialState, action = {}) => {
+      const emptyMatch = { word: action.payload };
+      const allWords = [...new Set([...state.words, emptyMatch])];
+      state.words = allWords;
+    },
     emptyWords: (state = initialState) => {
       state.words = [];
     },
@@ -35,7 +43,7 @@ export const matcherSlice = createSlice({
 });
 
 export const {
-  matchFound, emptyWords, updateWords,
+  matchFound, emptyWords, updateWords, anyMatchFound,
 } = matcherSlice.actions;
 
 export function highlightFirstMatch(word) {
@@ -48,6 +56,8 @@ export function highlightFirstMatch(word) {
         match: matchIt[0],
       };
       dispatch(matchFound(payload));
+    } else {
+      dispatch(anyMatchFound(word));
     }
   };
 }

@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+
 import {
   emptyWords,
   updateWords,
@@ -13,6 +14,13 @@ export default function Breakify() {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+
+  /*
+    TODO: move styling to other component
+   */
+  const inputStyling = 'text-black';
+  const labelStyling = 'text-white w-min px-2';
+  const buttonStyling = 'mx-auto bg-green w-full p-1 mt-8 rounded';
 
   const onHighlighting = () => {
     dispatch(emptyWords());
@@ -33,42 +41,52 @@ export default function Breakify() {
     } else {
       dispatch(emptyWords());
     }
+
+    return () => {
+      dispatch(emptyWords());
+    };
   }, [firstName, lastName]);
 
   return (
-    <div className="flex justify-center p-6 mx-auto text-white">
-      <div className="bg-black w-1/3">
+    <div className="flex justify-center p-4 mx-auto text-white">
+      <div className="bg-black w-min">
+        <div className="px-8 py-16">
+          <HighlightedPhrase />
 
-        <HighlightedPhrase className="" />
+          <div className="w-max">
+            <div className="flex justify-around">
+              <label className={labelStyling}>
+                First Name:
 
-        <div>
-          <label className="text-white">
-            First Name:
+                <input
+                  type="text"
+                  name="firstName"
+                  aria-label="firstName"
+                  value={firstName}
+                  className={inputStyling}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </label>
 
-            <input
-              type="text"
-              name="firstName"
-              aria-label="firstName"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-          </label>
-          <label>
-            Last Name:
+              <label className={labelStyling}>
+                Last Name:
 
-            <input
-              type="text"
-              name="LastName"
-              aria-label="lastName"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-          </label>
+                <input
+                  type="text"
+                  name="lastName"
+                  aria-label="lastName"
+                  value={lastName}
+                  className={inputStyling}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </label>
+            </div>
+
+            <button className={buttonStyling} type="button" onClick={() => onHighlighting()}>
+              Breakify
+            </button>
+          </div>
         </div>
-
-        <button type="button" onClick={() => onHighlighting()}>
-          Breakify
-        </button>
       </div>
     </div>
   );
