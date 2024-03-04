@@ -27,7 +27,7 @@ export default function HighlightedPhrase() {
       TODO: improve REGEX to accept more than one word.
     */
       const regex = new RegExp(`(?:${match})|(?:<=${match})`, 'g');
-      const wordAsArray = word.split(regex);
+      const wordAsArray = [...new Set(word.split(regex))];
       const wordWithSpan = wordAsArray.map((piece) => {
         if (piece === '') {
           return buildHighlighted(match);
