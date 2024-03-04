@@ -2,6 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import elements from '../elements.json';
 
+/*
+  TODO: Move this to a elementsSlice and use the store to inject the elements as a dependency
+*/
 const computeRegexBuild = () => {
   const elementsString = elements.elements.reduce((acc, elem) => {
     if (elem.symbol.length >= 2) {
@@ -17,9 +20,6 @@ const initialState = {
   words: [],
 };
 
-/*
-  TODO: refactor repeated code
-*/
 export const matcherSlice = createSlice({
   name: 'matcher',
   initialState,
