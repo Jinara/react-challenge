@@ -48,7 +48,7 @@ export const {
 
 export function highlightFirstMatch(word) {
   return async function thunk(dispatch) {
-    const regex = new RegExp(computeRegexBuild(), 'g');
+    const regex = new RegExp(computeRegexBuild(), 'ig');
     const matchIt = word.match(regex);
     if (matchIt) {
       const payload = {
